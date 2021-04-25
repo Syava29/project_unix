@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }} :: {{ block.super }}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{% for a in bd %}
+<div class="motiv-content">
+    <p>{{ a.familiya_prepod }}</p>
+    <p>{{ a.name_prepod }}</p>
+    <p>{{ a.otchestvo }}</p>
+</div>
+{% endfor %}
+
+
+
+{% for artist in artists %}
+
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+

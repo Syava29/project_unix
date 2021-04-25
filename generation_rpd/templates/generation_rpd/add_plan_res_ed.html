@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Добавление основной информации - {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% include 'inc/_sidebar.html' %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Планируемые результаты обучения по дисциплине</h1>
+{% comment %}
+<form action="{% url 'add_plan_res_ed' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<button type="submit" class="btn btn-primary btn-block">Добавить</button>
+</form>
+{% endcomment %}
+
+<table>
+{% for pr in bd %}
+<colgroup>
+        <col span="2" style="background:Khaki"><!-- С помощью этой конструкции задаем цвет фона для первых двух столбцов таблицы-->
+        <col style="background-color:LightCyan"><!-- Задаем цвет фона для следующего (одного) столбца таблицы-->
+</colgroup>
+    <tr class='success'>
+        <td>{{ pr.description_competence }}</td>
+    </tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}
+
+
+
+
