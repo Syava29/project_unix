@@ -296,21 +296,27 @@ def get_comp(request):
 
 
 def get_commp(request):
-    doc = Document('09_04_03.docx')
+    docc = Document('09_04_03.docx')
     # par = doc.paragraphs
-    tbl = doc.tables
+    tbl = docc.tables
 
     listt = []
     l = []
     i = 0
+
     while i < 3:
         for strok in tbl[0].rows:
             rr = strok.cells[i].text.strip()
             listt.append(''.join(rr.split('\n')))
-            Competence.objects.create(description_competence=''.join(rr.split('\n')))
-        #l.append(listt)
+            # l.append(listt)
+        for x in listt:
+            while listt.count(x) > 1:
+                listt.remove(x)
+
+        # Competence.objects.create(description_competence=listt[x]) # [1, 2, 3, 4]
         i += 1
+    for items in listt:
+        Competence.objects.create(description_competence=items)
 
     bd = Competence.objects.all()
-
     return render(request, "generation_rpd/add_plan_res_ed.html", {'bd': bd})
