@@ -24,5 +24,6 @@ urlpatterns = [
     path('opn_main_window/bd_test/', bd_test, name='bd_test'),
     path('opn_main_window/parsing_book/', parsing_book, name='parsing_book'),
     path('opn_main_window/get_comp/', get_comp, name='get_comp'),
-    path('opn_main_window/get_commp/', get_commp, name='get_commp')
+    path('opn_main_window/get_commp/', get_commp, name='get_commp'),
+    path('opn_main_window/get_data_comp/', get_data_comp, name='get_data_comp')
 ]

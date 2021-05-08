@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 import sqlite3
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence
+    Competence, ParsComp
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
     BDForm, GandO, PlanResEd
 from django.contrib import messages
@@ -296,27 +296,82 @@ def get_comp(request):
 
 
 def get_commp(request):
-    docc = Document('09_04_03.docx')
+    doc = Document('09_04_03.docx')
     # par = doc.paragraphs
-    tbl = docc.tables
-
+    tbl = doc.tables
+    n = []
     listt = []
     l = []
     i = 0
-
-    while i < 3:
+    while i < 2:
         for strok in tbl[0].rows:
             rr = strok.cells[i].text.strip()
             listt.append(''.join(rr.split('\n')))
-            # l.append(listt)
-        for x in listt:
-            while listt.count(x) > 1:
-                listt.remove(x)
-
-        # Competence.objects.create(description_competence=listt[x]) # [1, 2, 3, 4]
+            # Competence.objects.create(description_competence=''.join(rr.split('\n')))
+        l.append(listt)
         i += 1
-    for items in listt:
-        Competence.objects.create(description_competence=items)
+
+    for i in listt:
+        if i not in n:
+            n.append(i)
+            Competence.objects.create(description_competence=i)
 
     bd = Competence.objects.all()
+
     return render(request, "generation_rpd/add_plan_res_ed.html", {'bd': bd})
+
+
+def pars_test(table):
+    listt1 = []
+    listt2 = []
+    listt3 = []
+    l = []
+    i = 0
+    for strok in table[0].rows:
+        rr = strok.cells[0].text.strip()
+        listt1.append(''.join(rr.split('\n')))
+    listt1.pop(0)
+    l.append(listt1)
+    for strok in table[0].rows:
+        rr = strok.cells[1].text.strip()
+        listt2.append(''.join(rr.split('\n')))
+    listt2.pop(0)
+    l.append(listt2)
+    for strok in table[0].rows:
+        rr = strok.cells[2].text.strip()
+        listt3.append(''.join(rr.split('\n')))
+    listt3.pop(0)
+    l.append(listt3)
+   # for iitems in listt:
+          #      if iitems not in ll1:
+             #       ll1.append(iitems)
+    return(l)
+
+
+def get_data_comp(request):
+    doc = Document('09_04_03.docx')
+    # par = doc.paragraphs
+    i = 0
+
+    tbl = doc.tables
+
+    list_ret = []
+    k = pars_test(tbl)
+    l1 = list(k[0][0::3])
+    list_ret.append(l1)
+    l2 = list(k[1][0::3])
+    list_ret.append(l2)
+    l1_1 = list(k[2][1::3])
+    list_ret.append(l1_1)
+    l1_2 = list(k[2][2::3])
+    list_ret.append(l1_2)
+    l1_3 = list(k[2][0::3])
+    list_ret.append(l1_3)
+
+    #while i < len(l1):
+     #   ParsComp.objects.create(kod_comp=l1[i], descrip_comp=l2[i], kod_i_naim_comp1=l1_3[i], kod_i_naim_comp2=l1_2[i],
+      #                          kod_i_naim_comp3=l1_1[i])
+       # i += 1
+
+    bd = ParsComp.objects.all()
+    return render(request, "generation_rpd/plan_res.html", {'bd': bd})

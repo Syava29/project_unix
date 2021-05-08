@@ -106,3 +106,16 @@ class ParsBook(models.Model):
     def __str__(self):  # строковый метод
         return self.description_b
 
+
+class ParsComp(models.Model):
+    kod_comp = models.CharField(max_length=10)
+    descrip_comp = models.TextField(blank=True, verbose_name='Формулировка компетенции')
+    kod_i_naim_comp1 = models.TextField(blank=True,
+                                        verbose_name='Знать')
+    kod_i_naim_comp2 = models.TextField(blank=True,
+                                        verbose_name='Уметь')
+    kod_i_naim_comp3 = models.TextField(blank=True,
+                                        verbose_name='Владеть')
+
+    def __str__(self):  # строковый метод
+        return self.kod_comp
