@@ -1,9 +1,10 @@
 from django import forms
-from .models import Generator, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, Competence
+from .models import Generator, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, Competence, ParsComp, ParsBook
 import re
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+import requests
 
 
 class ContactForm(forms.Form):
@@ -119,3 +120,8 @@ class PlanResEd(forms.Form):
     z = forms.CharField(label='Знать', widget=forms.TextInput(attrs={"class": "form-control"}))
     u = forms.CharField(label='Уметь', widget=forms.TextInput(attrs={"class": "form-control"}))
     v = forms.CharField(label='Владеть', widget=forms.TextInput(attrs={"class": "form-control"}))
+
+
+class CompSelect(forms.Form):
+    comp = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.values('descrip_comp'), label='Компетенция',
+                                  widget=forms.Select(attrs={"class": "form-control"}))

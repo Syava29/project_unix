@@ -4,7 +4,7 @@ import sqlite3
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
     Competence, ParsComp
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd
+    BDForm, GandO, PlanResEd, CompSelect
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail
@@ -203,16 +203,13 @@ def opn_main_window(request):
 
 def add_plan_res_ed(request):
     if request.method == 'POST':
-        form = PlanResEd(request.POST)
+        form = CompSelect(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
-            ZUV.objects.create(z=form.cleaned_data['z'])
-            ZUV.objects.create(u=form.cleaned_data['u'])
-            ZUV.objects.create(v=form.cleaned_data['v'])
+
             return redirect('home')
     else:
-        form = PlanResEd()
-    return render(request, 'generation_rpd/add_plan_res_ed.html', {'form': form})
+        form = CompSelect()
+    return render(request, 'generation_rpd/add_compet.html', {'form': form})
 
 
 def connect_db(request):
@@ -252,12 +249,7 @@ def get_comp(request):
     filename1 = "comp.xlsx"
 
     """ Списки """
-    spisok = []
-    spisok_book = []
-    spisok_description = []
     spisok_zuv = []
-    spisok_content = []
-    spisok_nazv = []
     spisok_komp = []
     description_zuv = []
 
