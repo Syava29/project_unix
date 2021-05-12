@@ -4,7 +4,6 @@ import re
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-import requests
 
 
 class ContactForm(forms.Form):
@@ -102,8 +101,8 @@ class BDForm(forms.Form):
                                                      widget=forms.Select(attrs={"class": "form-control"}))
     discip_title = forms.ModelChoiceField(empty_label=None, queryset=Discip.objects.all(), label='Дисцип',
                                           widget=forms.Select(attrs={"class": "form-control"}))
-    #obyem_discip = forms.ModelChoiceField(empty_label=None, queryset=Discip.objects.all(), label='Объём',
-                                          #widget=forms.Select(attrs={"class": "form-control"}))
+    # obyem_discip = forms.ModelChoiceField(empty_label=None, queryset=Discip.objects.all(), label='Объём',
+                                          # widget=forms.Select(attrs={"class": "form-control"}))
     form_education_title = forms.ModelChoiceField(empty_label=None, queryset=FormEducation.objects.all(), label='Форма',
                                                   widget=forms.Select(attrs={"class": "form-control"}))
 
@@ -123,5 +122,6 @@ class PlanResEd(forms.Form):
 
 
 class CompSelect(forms.Form):
-    comp = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.values('descrip_comp'), label='Компетенция',
+    comp = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Компетенция',
                                   widget=forms.Select(attrs={"class": "form-control"}))
+

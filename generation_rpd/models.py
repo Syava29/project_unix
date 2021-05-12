@@ -118,4 +118,4 @@ class ParsComp(models.Model):
                                         verbose_name='Владеть')
 
     def __str__(self):  # строковый метод
-        return self.kod_comp
+        return self.descrip_comp

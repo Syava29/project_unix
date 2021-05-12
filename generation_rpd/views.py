@@ -205,7 +205,7 @@ def add_plan_res_ed(request):
     if request.method == 'POST':
         form = CompSelect(request.POST)
         if form.is_valid():
-
+            print(form.cleaned_data)
             return redirect('home')
     else:
         form = CompSelect()
@@ -367,3 +367,25 @@ def get_data_comp(request):
 
     bd = ParsComp.objects.all()
     return render(request, "generation_rpd/plan_res.html", {'bd': bd})
+
+
+def add_plan_res_education(request):
+    if request.method == 'POST':
+        form = CompSelect(request.POST)
+        list_1 = []
+        k = ParsComp.objects.values_list('descrip_comp')
+        for items in k:
+            list_1.append(list(items))
+        if form.is_valid():
+            k = str(form.cleaned_data['comp'])
+            for itt in list_1:
+                for i in itt:
+                    if i == k:
+                        print('=============')
+                    else:
+                        print(k)
+            #if form.cleaned_data['comp'] ==
+            return redirect('get_data_comp')
+    else:
+        form = CompSelect()
+    return render(request, 'generation_rpd/add_compet.html', {'form': form})

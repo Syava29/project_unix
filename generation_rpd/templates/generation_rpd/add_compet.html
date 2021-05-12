@@ -12,6 +12,7 @@
 
 {% block content %}
 
+<h1>Планируемы результаты обучения</h1>
 
 {% for a in bd %}
 <div class="motiv-content">
@@ -21,7 +22,7 @@
 </div>
 {% endfor %}
 
-<form action="{% url 'add_plan_res_ed' %}" method="post">
+<form action="{% url 'add_plan_res_education' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 <button type="submit" class="btn btn-primary btn-block">Добавить</button>
