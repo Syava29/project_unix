@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 import sqlite3
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence, ParsComp
+    Competence, ParsComp, SelectComp
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
     BDForm, GandO, PlanResEd, CompSelect
 from django.contrib import messages
@@ -209,7 +209,9 @@ def add_plan_res_ed(request):
             return redirect('home')
     else:
         form = CompSelect()
-    return render(request, 'generation_rpd/add_compet.html', {'form': form})
+
+    bd1 = SelectComp.objects.all()
+    return render(request, 'generation_rpd/add_compet.html', {'form': form, 'bd1': bd1})
 
 
 def connect_db(request):
@@ -372,20 +374,47 @@ def get_data_comp(request):
 def add_plan_res_education(request):
     if request.method == 'POST':
         form = CompSelect(request.POST)
+        listt = []
         list_1 = []
+        list_2 = []
+        list_3 = []
         k = ParsComp.objects.values_list('descrip_comp')
+        k1 = ParsComp.objects.values_list('kod_i_naim_comp1')
+        k2 = ParsComp.objects.values_list('kod_i_naim_comp2')
+        k3 = ParsComp.objects.values_list('kod_i_naim_comp3')
+
         for items in k:
+            listt.append(list(items))
+
+        for items in k1:
             list_1.append(list(items))
+
+        for items in k2:
+            list_2.append(list(items))
+
+        for items in k3:
+            list_3.append(list(items))
+
         if form.is_valid():
+            flag = 0
             k = str(form.cleaned_data['comp'])
-            for itt in list_1:
+            #print(list_1)
+            for itt in listt:
                 for i in itt:
                     if i == k:
-                        print('=============')
-                    else:
-                        print(k)
+                        print(list_1[flag][0], '+++')
+                        print(list_2[flag][0], '+++')
+                        print(list_3[flag][0], '+++')
+                        SelectComp.objects.create(descrip_c=k, kod_i_naim_c1=list_1[flag][0], kod_i_naim_c2=list_3[flag][0],
+                                                  kod_i_naim_c3=list_2[flag][0])
+
+                        pass
+                    flag += 1
             #if form.cleaned_data['comp'] ==
-            return redirect('get_data_comp')
+            return redirect('add_plan_res_education')
     else:
         form = CompSelect()
-    return render(request, 'generation_rpd/add_compet.html', {'form': form})
+
+    bd1 = SelectComp.objects.all()
+    print(bd1)
+    return render(request, 'generation_rpd/add_compet.html', {'form': form, 'bd1': bd1})

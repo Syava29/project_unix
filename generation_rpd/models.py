@@ -119,3 +119,17 @@ class ParsComp(models.Model):
 
     def __str__(self):  # строковый метод
         return self.descrip_comp
+
+
+class SelectComp(models.Model):
+    kod_c = models.CharField(max_length=10)
+    descrip_c = models.TextField(blank=True, verbose_name='Формулировка компетенции')
+    kod_i_naim_c1 = models.TextField(blank=True,
+                                     verbose_name='Знать')
+    kod_i_naim_c2 = models.TextField(blank=True,
+                                     verbose_name='Уметь')
+    kod_i_naim_c3 = models.TextField(blank=True,
+                                     verbose_name='Владеть')
+
+    def __str__(self):  # строковый метод
+        return self.descrip_c

@@ -14,24 +14,32 @@
 
 <h1>Планируемы результаты обучения</h1>
 
-{% for a in bd %}
-<div class="motiv-content">
-    <p>{{ a.familiya_prepod }}</p>
-    <p>{{ a.name_prepod }}</p>
-    <p>{{ a.otchestvo }}</p>
-</div>
-{% endfor %}
 
 <form action="{% url 'add_plan_res_education' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+
 </form>
+<button class="btn btn-primary btn-block">Отчистить</button>
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Формируемые компетенции</th>
+        <th colspan="2">Планируемые результаты обучения по дисциплине</th>
 
-{% for artist in artists %}
+    </tr>
 
-{% endfor %}
+    {% for tbl in bd1 %}
+    <tr>
+        <td rowspan="3">{{tbl.kod_c}}</td>
+        <td rowspan="3">{{tbl.descrip_c}}</td>
+        <td>{{tbl.kod_i_naim_c1}}</td>
+    <tr><td>{{tbl.kod_i_naim_c2}}</td></tr>
+    <tr><td>{{tbl.kod_i_naim_c3}}</td></tr>
 
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock %}
 
