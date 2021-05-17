@@ -133,3 +133,8 @@ class SelectComp(models.Model):
 
     def __str__(self):  # строковый метод
         return self.descrip_c
+
+class TargetsAndTasks(models.Model):
+    target = models.TextField(blank=True, verbose_name='Цели и задачи')
+    task = models.TextField(blank=True, verbose_name='Знать')
+    place_discip = models.TextField(blank=True, verbose_name='Знать')

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 import sqlite3
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence, ParsComp, SelectComp
+    Competence, ParsComp, SelectComp, TargetsAndTasks
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
     BDForm, GandO, PlanResEd, CompSelect
 from django.contrib import messages
@@ -190,8 +190,9 @@ def add_goals(request):
     if request.method == 'POST':
         form = GandO(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
-            return redirect('home')
+            TargetsAndTasks.objects.create(target=form.cleaned_data['g_a_o'], task=form.cleaned_data['task'],
+                                           place_discip=form.cleaned_data['mesto_discip'])
+            return redirect('add_plan_res_education')
     else:
         form = GandO()
     return render(request, 'generation_rpd/goals.html', {'form': form})

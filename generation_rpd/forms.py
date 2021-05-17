@@ -108,7 +108,8 @@ class BDForm(forms.Form):
 
 
 class GandO(forms.Form):
-    g_a_o = forms.CharField(label='Цели и задачи', widget=forms.Textarea(attrs={"class": "form-control"}))
+    g_a_o = forms.CharField(label='Цели', widget=forms.Textarea(attrs={"class": "form-control"}))
+    task = forms.CharField(label='Задачи', widget=forms.Textarea(attrs={"class": "form-control"}))
     mesto_discip = forms.CharField(label='Место дисциплины', widget=forms.Textarea(attrs={"class": "form-control"}))
 
 

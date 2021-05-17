@@ -11,8 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Цели и задачи</h1>
-
+<h1>Цели, задачи и место дисциплины в структуре образоательной программы</h1>
 <form action="{% url 'add_goals' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
