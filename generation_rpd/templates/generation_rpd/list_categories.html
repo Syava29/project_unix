@@ -17,7 +17,7 @@
     <a href="{% url 'get_commp'%}" class="list-group-item list-group-item-action">Фонд оценочных средств для проведения промежуточной аттестации
         обучающихся по дисциплине
     <span class="badge rounded-pill bg-secondary">-</span></a>
-    <a href="/" class="list-group-item list-group-item-action">Перечень основной и дополнительной учебной литературы, необходимой для освоения дисциплины
+    <a href="{% url 'gen_book' %}" class="list-group-item list-group-item-action">Перечень основной и дополнительной учебной литературы, необходимой для освоения дисциплины
     <span class="badge rounded-pill bg-secondary">-</span>
     </a>
     <a href="/" class="list-group-item list-group-item-action">Перечень ресурсов информационно-телекоммуникационной сети «Интернет», необходимых для освоения дисциплины
@@ -29,3 +29,4 @@
     <span class="badge rounded-pill bg-secondary">-</span></a>
 
 </div>
+

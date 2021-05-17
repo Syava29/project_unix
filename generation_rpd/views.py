@@ -2,9 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 import sqlite3
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence, ParsComp, SelectComp, TargetsAndTasks
+    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd, CompSelect
+    BDForm, GandO, PlanResEd, CompSelect, Books
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail
@@ -180,7 +180,7 @@ def add_test_data(request):
             NapravPodgotovki.objects.create(naprav_podgotovki_title=form.cleaned_data['naprav_podgotovki_title'])
             Discip.objects.create(discip_title=form.cleaned_data['discip_title'])
             FormEducation.objects.create(form_education_title=form.cleaned_data['form_education_title'])
-            return redirect('generation_rpd/opn_main_window')
+            return redirect('add_goals')
     else:
         form = BDForm()
     return render(request, 'generation_rpd/add_basic_data.html', {'form': form})
@@ -419,3 +419,22 @@ def add_plan_res_education(request):
     bd1 = SelectComp.objects.all()
     print(bd1)
     return render(request, 'generation_rpd/add_compet.html', {'form': form, 'bd1': bd1})
+
+
+def del_bd(request):
+    bd1 = SelectComp.objects.all()
+
+    return render(request, 'generation_rpd/add_compet.html', {'bd1': bd1})
+
+def gen_book(request):
+    if request.method == 'POST':
+        form = Books(request.POST)
+        if form.is_valid():
+            SelectBooks.objects.create(book=form.cleaned_data['an_book'])
+            SelectBooks.objects.create(book=form.cleaned_data['offer_books'])
+            print(form.cleaned_data)
+            return redirect('gen_book')
+    else:
+        form = Books()
+    bd_book = SelectBooks.objects.all()
+    return render(request, 'generation_rpd/books.html', {'form': form, 'bd_book': bd_book})

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Добавление основной информации - {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% include 'inc/_sidebar.html' %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Планируемые результаты обучения по дисциплине</h1>
+
+{% comment %}
+<table>
+    {% for pr in bd %}
+    <colgroup>
+        <col span="2" style="background:Khaki"><!-- С помощью этой конструкции задаем цвет фона для первых двух столбцов таблицы-->
+        <col style="background-color:LightCyan"><!-- Задаем цвет фона для следующего (одного) столбца таблицы-->
+    </colgroup>
+    <tr class='success'>
+        <td>{{ pr.description_competence }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+{% endcomment %}
+
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Формируемые компетенции</th>
+        <th colspan="2">Планируемые результаты обучения по дисциплине</th>
+
+    </tr>
+
+    {% for tbl in bd %}
+    <tr>
+        <td rowspan="3">{{tbl.kod_comp}}</td>
+        <td rowspan="3">{{tbl.descrip_comp}}</td>
+        <td>{{tbl.kod_i_naim_comp1}}</td>
+    <tr><td>{{tbl.kod_i_naim_comp2}}</td></tr>
+    <tr><td>{{tbl.kod_i_naim_comp3}}</td></tr>
+
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+{% endblock %}
+
+
+
+

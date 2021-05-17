@@ -38,6 +38,13 @@ class Category(models.Model):
         ordering = ['title']
 
 
+class ListContent(models.Model):
+    content = models.CharField(max_length=150)
+
+    def __str__(self):  # строковый метод
+        return self.content
+
+
 class Prepod(models.Model):
     familiya_prepod = models.CharField(max_length=20)
     name_prepod = models.CharField(max_length=15)
@@ -134,7 +141,18 @@ class SelectComp(models.Model):
     def __str__(self):  # строковый метод
         return self.descrip_c
 
+
+class SelectBooks(models.Model):
+    book = models.TextField(blank=True, verbose_name='Библиографическая запись')
+
+    def __str__(self):  # строковый метод
+        return self.book
+
+
 class TargetsAndTasks(models.Model):
     target = models.TextField(blank=True, verbose_name='Цели и задачи')
     task = models.TextField(blank=True, verbose_name='Знать')
     place_discip = models.TextField(blank=True, verbose_name='Знать')
+
+    def __str__(self):  # строковый метод
+        return self.target

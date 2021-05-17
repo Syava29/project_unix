@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Добавление основной информации - {{ block.super }}
+{% endblock %}
+
+
+
+{% block sidebar %}
+
+{% include 'inc/_sidebar.html' %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<h1>Перечень основной и дополнительной учебной литературы, необходимой для освоения дисциплины</h1>
+
+<form action="{% url 'gen_book' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<button type="submit" class="btn btn-primary btn-block">Добавить</button>
+</form>
+
+
+
+<p>Выбранная литература:</p>
+{% comment %}
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Библиографическая запись</th>
+        <th>Аннотация выбранной книги</th>
+    </tr>
+
+    {% for items in bd_book %}
+    <tr>
+        <td>{{items.description_b}}</td>
+        <td>{{items.ann_b}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endcomment %}
+
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Библиографическая запись</th>
+    </tr>
+
+    {% for items in bd_book %}
+    <tr>
+        <td>{{items.book}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+{% endblock %}
+
+
+
+
