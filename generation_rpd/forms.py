@@ -128,6 +128,9 @@ class CompSelect(forms.Form):
 
 
 class Books(forms.Form):
-    an_book = forms.CharField(label='Добавьте библиографическую запись', widget=forms.Textarea(attrs={"class": "form-control"}))
-    offer_books = forms.ModelChoiceField(empty_label=None, queryset=ParsBook.objects.all(), label='Предложение литературы',
-                                  widget=forms.Select(attrs={"class": "form-control"}))
+    an_book = forms.CharField(label='Добавьте библиографическую запись',
+                              widget=forms.Textarea(attrs={"class": "form-control"}))
+    offer_books = forms.ModelChoiceField(empty_label=None, queryset=ParsBook.objects.all(),
+                                         label='Предложение литературы',
+                                         widget=forms.Select(attrs={"class": "form-control"}))
+

@@ -403,9 +403,9 @@ def add_plan_res_education(request):
             for itt in listt:
                 for i in itt:
                     if i == k:
-                        print(list_1[flag][0], '+++')
-                        print(list_2[flag][0], '+++')
-                        print(list_3[flag][0], '+++')
+                        print(list_1[flag][0])
+                        print(list_2[flag][0])
+                        print(list_3[flag][0])
                         SelectComp.objects.create(descrip_c=k, kod_i_naim_c1=list_1[flag][0], kod_i_naim_c2=list_3[flag][0],
                                                   kod_i_naim_c3=list_2[flag][0])
 
@@ -438,3 +438,10 @@ def gen_book(request):
         form = Books()
     bd_book = SelectBooks.objects.all()
     return render(request, 'generation_rpd/books.html', {'form': form, 'bd_book': bd_book})
+
+
+def gen_res(request):
+    bd_book = SelectBooks.objects.all()
+    bd1 = SelectComp.objects.all()
+    bd2 = TargetsAndTasks.objects.all()
+    return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
