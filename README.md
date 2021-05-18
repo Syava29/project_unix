@@ -1,4 +1,4 @@
-# project_unix
+# Генератор РПД
 ![Снимок экрана от 2021-05-18 19-08-45](https://user-images.githubusercontent.com/51246549/118686756-f9808580-b80c-11eb-85b9-11eef2705d2a.png)
 ![Снимок экрана от 2021-05-18 19-08-53](https://user-images.githubusercontent.com/51246549/118686765-fc7b7600-b80c-11eb-861e-09fafe238e45.png)
 ![Снимок экрана от 2021-05-18 19-09-23](https://user-images.githubusercontent.com/51246549/118686770-fdaca300-b80c-11eb-9224-1bebc506cda6.png)
