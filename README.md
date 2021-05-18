@@ -1,1 +1,11 @@
 # project_unix
+![Снимок экрана от 2021-05-18 19-08-45](https://user-images.githubusercontent.com/51246549/118686756-f9808580-b80c-11eb-85b9-11eef2705d2a.png)
+![Снимок экрана от 2021-05-18 19-08-53](https://user-images.githubusercontent.com/51246549/118686765-fc7b7600-b80c-11eb-861e-09fafe238e45.png)
+![Снимок экрана от 2021-05-18 19-09-23](https://user-images.githubusercontent.com/51246549/118686770-fdaca300-b80c-11eb-9224-1bebc506cda6.png)
+![Снимок экрана от 2021-05-18 19-09-30](https://user-images.githubusercontent.com/51246549/118686780-00a79380-b80d-11eb-9dea-aa4e346c55c2.png)
+![Снимок экрана от 2021-05-18 19-09-33](https://user-images.githubusercontent.com/51246549/118686783-01402a00-b80d-11eb-9d9a-c74a94c40751.png)
+![Снимок экрана от 2021-05-18 19-09-38](https://user-images.githubusercontent.com/51246549/118686785-01d8c080-b80d-11eb-9510-2e591d0ba414.png)
+![Снимок экрана от 2021-05-18 19-09-42](https://user-images.githubusercontent.com/51246549/118686787-02715700-b80d-11eb-81d6-1a12c94b4aee.png)
+![Снимок экрана от 2021-05-18 19-09-56](https://user-images.githubusercontent.com/51246549/118686788-02715700-b80d-11eb-8498-5baa3c0cf85c.png)
+![Снимок экрана от 2021-05-18 19-10-06](https://user-images.githubusercontent.com/51246549/118686790-0309ed80-b80d-11eb-8d10-c8b14300d9de.png)
+![Снимок экрана от 2021-05-18 19-10-08](https://user-images.githubusercontent.com/51246549/118686792-0309ed80-b80d-11eb-9783-072accf40943.png)
