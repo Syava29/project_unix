@@ -94,31 +94,19 @@ class NewsByCategory(ListView):
 
 def test(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'], 'syava_test@mail.ru',
-                             ['sevostyanov1999@gmail.com'], fail_silently=True)
-            email = EmailMessage(
-                'Рабочая прграамма дисциплины',
-                'Эта программа сделана с помощью конструктора рабочей программы дисциплины',
-                'syava_test@mail.ru',
-                ['sevostyanov1999@gmail.com'],
-                ['syava_test@mail.ru']
-            )
+        email = EmailMessage(
+            'Рабочая программа дисциплины',
+            'Эта программа сделана с помощью конструктора рабочей программы дисциплины',
+            'syava_test@mail.ru',
+            ['sevostyanov1999@gmail.com'],
+            ['syava_test@mail.ru']
+        )
 
-            email.attach_file('09_04_03.docx')
-            email.send()
+        email.attach_file('09_04_03.docx')
+        email.send()
+        return redirect('test')
 
-            if mail:
-                messages.success(request, 'Письмо отправленно!')
-                return redirect('test')
-            else:
-                messages.error(request, 'Ошибка отправки')
-        else:
-            messages.error(request, 'Ошибка регистрации')
-    else:
-        form = ContactForm()
-    return render(request, 'generation_rpd/test.html', {"form": form})
+    return render(request, 'generation_rpd/test.html')
 
 
 def get_category(request, category_id):
@@ -350,9 +338,9 @@ def pars_test(table):
         listt3.append(''.join(rr.split('\n')))
     listt3.pop(0)
     l.append(listt3)
-   # for iitems in listt:
-          #      if iitems not in ll1:
-             #       ll1.append(iitems)
+    # for iitems in listt:
+    #      if iitems not in ll1:
+    #       ll1.append(iitems)
     return(l)
 
 
@@ -377,9 +365,9 @@ def get_data_comp(request):
     list_ret.append(l1_3)
 
     #while i < len(l1):
-     #   ParsComp.objects.create(kod_comp=l1[i], descrip_comp=l2[i], kod_i_naim_comp1=l1_3[i], kod_i_naim_comp2=l1_2[i],
-      #                          kod_i_naim_comp3=l1_1[i])
-       # i += 1
+    #   ParsComp.objects.create(kod_comp=l1[i], descrip_comp=l2[i], kod_i_naim_comp1=l1_3[i], kod_i_naim_comp2=l1_2[i],
+    #                          kod_i_naim_comp3=l1_1[i])
+    # i += 1
 
     bd = ParsComp.objects.all()
     return render(request, "generation_rpd/plan_res.html", {'bd': bd})
