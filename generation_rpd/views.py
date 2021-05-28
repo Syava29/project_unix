@@ -4,16 +4,18 @@ import sqlite3
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
     Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd, CompSelect, Books
+    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 import requests
 from bs4 import BeautifulSoup
 from collections import Counter
 from openpyxl import load_workbook
 import re
 from docx import Document
+
+
 
 
 def register(request):
@@ -96,6 +98,16 @@ def test(request):
         if form.is_valid():
             mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'], 'syava_test@mail.ru',
                              ['sevostyanov1999@gmail.com'], fail_silently=True)
+            email = EmailMessage(
+                'Рабочая прграамма дисциплины',
+                'Эта программа сделана с помощью конструктора рабочей программы дисциплины',
+                'syava_test@mail.ru',
+                ['sevostyanov1999@gmail.com'],
+                ['syava_test@mail.ru']
+            )
+            email.attach_file('09_04_03.docx')
+            email.send()
+
             if mail:
                 messages.success(request, 'Письмо отправленно!')
                 return redirect('test')
@@ -426,6 +438,7 @@ def del_bd(request):
 
     return render(request, 'generation_rpd/add_compet.html', {'bd1': bd1})
 
+
 def gen_book(request):
     if request.method == 'POST':
         form = Books(request.POST)
@@ -444,4 +457,25 @@ def gen_res(request):
     bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.all()
     bd2 = TargetsAndTasks.objects.all()
+    if request.method == 'POST':
+        print(bd_book)
+        return redirect('gen_res')
+
     return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
+
+
+def handle_uploaded_file(f):
+    with open('some/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return redirect('gen_res')
+    else:
+        form = UploadFileForm()
+    return render(request, 'generation_rpd/up_file.html', {'form': form})

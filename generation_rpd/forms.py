@@ -134,3 +134,9 @@ class Books(forms.Form):
                                          label='Предложение литературы',
                                          widget=forms.Select(attrs={"class": "form-control"}))
 
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
+
+

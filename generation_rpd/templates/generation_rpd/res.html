@@ -66,8 +66,11 @@
     {% endfor %}
 </table>
 
+<form action = "{% url 'test' %}" method = "POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-block">Сгенерировать рабочую программу</button>
+</form>
 
-<button type="submit" class="btn btn-primary btn-block">Сгенерировать рабочую программу</button>
 
 
 {% endblock %}
