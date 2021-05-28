@@ -105,6 +105,7 @@ def test(request):
                 ['sevostyanov1999@gmail.com'],
                 ['syava_test@mail.ru']
             )
+
             email.attach_file('09_04_03.docx')
             email.send()
 
