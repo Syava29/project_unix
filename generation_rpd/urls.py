@@ -29,7 +29,5 @@ urlpatterns = [
     path('opn_main_window/add_plan_res_education/', add_plan_res_education, name='add_plan_res_education'),
     # path('opn_main_window/add_plan_res_education/', del_bd, name='del_bd'),
     path('opn_main_window/books/', gen_book, name='gen_book'),
-    path('opn_main_window/res/', gen_res, name='gen_res'),
-    path('opn_main_window/upf/', upload_file, name='upf')
-
+    path('opn_main_window/res/', gen_res, name='gen_res')
 ]

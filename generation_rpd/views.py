@@ -102,7 +102,7 @@ def test(request):
             ['syava_test@mail.ru']
         )
 
-        email.attach_file('09_04_03.docx')
+        email.attach_file('RPD.docx')
         email.send()
         return redirect('test')
 
@@ -442,29 +442,57 @@ def gen_book(request):
     return render(request, 'generation_rpd/books.html', {'form': form, 'bd_book': bd_book})
 
 
+def gen_final_doc():
+    doc = Document('RPD.docx')
+    # добавляем первый параграф
+
+    list_1 = []
+    list_2 = []
+    list_3 = []
+
+    bd_book = SelectBooks.objects.all()
+    bd1 = SelectComp.objects.values_list('descrip_c')
+    bd2 = TargetsAndTasks.objects.values_list('target')
+    k = SelectBooks.objects.values_list('book')
+
+    for items in k:
+        list_1.append(items)
+
+    for items in bd1:
+        list_2.append(items)
+
+    for items in bd2:
+        list_3.append(items)
+
+    #doc.add_paragraph(list_1[0])
+
+    # добавляем еще два параграфа
+    par1 = doc.add_paragraph('Это второй абзац.')
+    par2 = doc.add_paragraph('Это третий абзац.')
+
+    # добавляем текст во второй параграф
+    #par1.add_run(list_2[0])
+    for items in k:
+        doc.add_paragraph(items)
+
+
+    # добавляем текст в третий параграф
+    #par2.add_run(list_3[0]).bold = True
+
+    doc.save('RPD.docx')
+
+
 def gen_res(request):
     bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.all()
     bd2 = TargetsAndTasks.objects.all()
+    print(bd_book)
+    gen_final_doc()
     if request.method == 'POST':
-        print(bd_book)
+        #print(bd_book)
         return redirect('gen_res')
 
     return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
 
 
-def handle_uploaded_file(f):
-    with open('some/file/name.txt', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
 
-
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return redirect('gen_res')
-    else:
-        form = UploadFileForm()
-    return render(request, 'generation_rpd/up_file.html', {'form': form})
