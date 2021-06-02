@@ -128,9 +128,3 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'syava_test@mail.ru'
-EMAIL_HOST_PASSWORD = 'fHs-s6C-vki-pZu'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True

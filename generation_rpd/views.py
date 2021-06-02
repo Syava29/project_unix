@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 import sqlite3
+import os
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
     Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
@@ -14,8 +15,7 @@ from collections import Counter
 from openpyxl import load_workbook
 import re
 from docx import Document
-
-
+from docxtpl import DocxTemplate
 
 
 def register(request):
@@ -341,7 +341,7 @@ def pars_test(table):
     # for iitems in listt:
     #      if iitems not in ll1:
     #       ll1.append(iitems)
-    return(l)
+    return (l)
 
 
 def get_data_comp(request):
@@ -364,7 +364,7 @@ def get_data_comp(request):
     l1_3 = list(k[2][0::3])
     list_ret.append(l1_3)
 
-    #while i < len(l1):
+    # while i < len(l1):
     #   ParsComp.objects.create(kod_comp=l1[i], descrip_comp=l2[i], kod_i_naim_comp1=l1_3[i], kod_i_naim_comp2=l1_2[i],
     #                          kod_i_naim_comp3=l1_1[i])
     # i += 1
@@ -400,19 +400,20 @@ def add_plan_res_education(request):
         if form.is_valid():
             flag = 0
             k = str(form.cleaned_data['comp'])
-            #print(list_1)
+            # print(list_1)
             for itt in listt:
                 for i in itt:
                     if i == k:
                         print(list_1[flag][0])
                         print(list_2[flag][0])
                         print(list_3[flag][0])
-                        SelectComp.objects.create(descrip_c=k, kod_i_naim_c1=list_1[flag][0], kod_i_naim_c2=list_3[flag][0],
+                        SelectComp.objects.create(descrip_c=k, kod_i_naim_c1=list_1[flag][0],
+                                                  kod_i_naim_c2=list_3[flag][0],
                                                   kod_i_naim_c3=list_2[flag][0])
 
                         pass
                     flag += 1
-            #if form.cleaned_data['comp'] ==
+            # if form.cleaned_data['comp'] ==
             return redirect('add_plan_res_education')
     else:
         form = CompSelect()
@@ -443,15 +444,23 @@ def gen_book(request):
 
 
 def gen_final_doc():
-    doc = Document('RPD.docx')
+    doc = DocxTemplate('template.docx')
     # добавляем первый параграф
 
     list_1 = []
+    list_11 = []
+    list_12 = []
+    list_13 = []
     list_2 = []
     list_3 = []
 
     bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.values_list('descrip_c')
+    bd11 = SelectComp.objects.values_list('kod_i_naim_c1')
+    bd12 = SelectComp.objects.values_list('kod_i_naim_c2')
+    bd13 = SelectComp.objects.values_list('kod_i_naim_c3')
+
+
     bd2 = TargetsAndTasks.objects.values_list('target')
     k = SelectBooks.objects.values_list('book')
 
@@ -459,25 +468,52 @@ def gen_final_doc():
         list_1.append(items)
 
     for items in bd1:
-        list_2.append(items)
+        list_2.append(str(items))
+
+    for items in bd11:
+        list_11.append(str(items))
+
+    for items in bd12:
+        list_12.append(str(items))
+
+    for items in bd13:
+        list_13.append(str(items))
 
     for items in bd2:
         list_3.append(items)
 
-    #doc.add_paragraph(list_1[0])
+    table_contents = []
+    k = 0
+    for i in list_2:
+        table_contents.append({
+            'cod': i,
+            'desc1': list_11[k],
+            'desc2': list_12[k],
+            'desc3': list_13[k]
+        })
+        k += 1
+
+    context = {
+        'title': 'Automated Report',
+
+        'table_contents': table_contents,
+
+    }
+
+    doc.render(context)
+    # doc.add_paragraph(list_1[0])
 
     # добавляем еще два параграфа
-    par1 = doc.add_paragraph('Это второй абзац.')
-    par2 = doc.add_paragraph('Это третий абзац.')
+    #par1 = doc.add_paragraph('Это второй абзац.')
+    #par2 = doc.add_paragraph('Это третий абзац.')
 
     # добавляем текст во второй параграф
-    #par1.add_run(list_2[0])
-    for items in k:
-        doc.add_paragraph(items)
-
+    # par1.add_run(list_2[0])
+    #for items in k:
+        #doc.add_paragraph(items)
 
     # добавляем текст в третий параграф
-    #par2.add_run(list_3[0]).bold = True
+    # par2.add_run(list_3[0]).bold = True
 
     doc.save('RPD.docx')
 
@@ -486,13 +522,22 @@ def gen_res(request):
     bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.all()
     bd2 = TargetsAndTasks.objects.all()
-    print(bd_book)
+    # print(bd_book)
     gen_final_doc()
     if request.method == 'POST':
-        #print(bd_book)
+        # print(bd_book)
         return redirect('gen_res')
 
     return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
 
 
+def del_doc(request):
+    bd_book = SelectBooks.objects.all()
+    bd1 = SelectComp.objects.all()
+    bd2 = TargetsAndTasks.objects.all()
+
+    if request.method == 'POST':
+        os.remove('/home/syava/webapp/RPD.docx')
+        return redirect('add_test_data')
+    return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
 
