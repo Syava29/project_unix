@@ -444,7 +444,7 @@ def gen_book(request):
 
 
 def gen_final_doc():
-    doc = DocxTemplate('template.docx')
+    doc = DocxTemplate('tempp1.docx')
     # добавляем первый параграф
 
     list_1 = []
@@ -483,7 +483,9 @@ def gen_final_doc():
         list_3.append(items)
 
     table_contents = []
+    book_cont = []
     k = 0
+    k1 = 0
     for i in list_2:
         table_contents.append({
             'cod': i,
@@ -495,9 +497,8 @@ def gen_final_doc():
 
     context = {
         'title': 'Automated Report',
-
         'table_contents': table_contents,
-
+        'book': list_1
     }
 
     doc.render(context)
@@ -516,7 +517,7 @@ def gen_final_doc():
     # par2.add_run(list_3[0]).bold = True
 
     doc.save('RPD.docx')
-
+    print(list_1[1])
 
 def gen_res(request):
     bd_book = SelectBooks.objects.all()
