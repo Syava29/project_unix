@@ -454,7 +454,6 @@ def gen_final_doc():
     list_2 = []
     list_3 = []
 
-    bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.values_list('descrip_c')
     bd11 = SelectComp.objects.values_list('kod_i_naim_c1')
     bd12 = SelectComp.objects.values_list('kod_i_naim_c2')
