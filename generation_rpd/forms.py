@@ -122,6 +122,15 @@ class PlanResEd(forms.Form):
     v = forms.CharField(label='Владеть', widget=forms.TextInput(attrs={"class": "form-control"}))
 
 
+class StructDiscip(forms.Form):
+    timee = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Часы',
+                                  widget=forms.Select(attrs={"class": "form-control"}))
+    classes = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Занятия',
+                                  widget=forms.Select(attrs={"class": "form-control"}))
+    form_ex = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Форма аттестации',
+                                  widget=forms.Select(attrs={"class": "form-control"}))
+
+
 class CompSelect(forms.Form):
     comp = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Компетенция',
                                   widget=forms.Select(attrs={"class": "form-control"}))

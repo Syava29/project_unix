@@ -5,7 +5,7 @@ import os
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
     Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm
+    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm, StructDiscip
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail, EmailMessage
@@ -422,6 +422,18 @@ def add_plan_res_education(request):
     print(bd1)
     return render(request, 'generation_rpd/add_compet.html', {'form': form, 'bd1': bd1})
 
+
+def struct_discip(request):
+    if request.method == 'POST':
+        form = StructDiscip(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            return redirect('home')
+    else:
+        form = StructDiscip()
+
+    bd1 = SelectComp.objects.all()
+    return render(request, 'generation_rpd/.html', {'form': form})
 
 def del_bd(request):
     bd1 = SelectComp.objects.all()

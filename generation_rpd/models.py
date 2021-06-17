@@ -156,3 +156,10 @@ class TargetsAndTasks(models.Model):
 
     def __str__(self):  # строковый метод
         return self.target
+
+
+class RecomendBoook(models.Model):
+    desc = models.TextField(blank=True, verbose_name='Библиографическая запись')
+
+    def __str__(self):  # строковый метод
+        return self.desc
