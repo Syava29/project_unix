@@ -16,6 +16,7 @@ from openpyxl import load_workbook
 import re
 from docx import Document
 from docxtpl import DocxTemplate
+from rutermextract import TermExtractor
 
 
 def register(request):
@@ -423,17 +424,62 @@ def add_plan_res_education(request):
     return render(request, 'generation_rpd/add_compet.html', {'form': form, 'bd1': bd1})
 
 
+def term_ex(term):
+    term_extractor = TermExtractor()
+    list_term = []
+    list_count = []
+    for term in term_extractor(term, nested=True):
+        list_term.append(term.normalized)
+    dic_term = set(list_term)
+    return(dic_term)
+
+
+def recomend_books():
+    list_c = []
+    res_list = []
+    list_b_t = []
+    list_c_t = []
+    list_desc_book = []
+    res_l = []
+    bd1 = SelectComp.objects.values_list('descrip_c')
+    bd11 = SelectComp.objects.values_list('kod_i_naim_c1')
+    bd12 = SelectComp.objects.values_list('kod_i_naim_c2')
+    bd13 = SelectComp.objects.values_list('kod_i_naim_c3')
+    pb1 = ParsBook.objects.values_list('ann_b')
+    pb2 = ParsBook.objects.values_list('description_b')
+    list_c.append(bd1)
+    list_c.append(bd11)
+    list_c.append(bd12)
+    list_c.append(bd13)
+    for items_b in pb1:
+        list_desc_book.append(*items_b)
+
+    for items in list_c:
+        for ii in items:
+            res_l.append(*ii)
+
+    for items_t in list_desc_book:
+       list_b_t.append(term_ex(items_t))
+
+    for items_t_c in res_l:
+       list_c_t.append(term_ex(items_t_c))
+
+    return(list_c_t)
+
+
 def struct_discip(request):
     if request.method == 'POST':
         form = StructDiscip(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            k = recomend_books()
+            print(k[0])
             return redirect('home')
     else:
         form = StructDiscip()
 
     bd1 = SelectComp.objects.all()
-    return render(request, 'generation_rpd/.html', {'form': form})
+    return render(request, 'generation_rpd/struct_discip.html', {'form': form})
+
 
 def del_bd(request):
     bd1 = SelectComp.objects.all()
