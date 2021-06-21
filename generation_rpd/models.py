@@ -163,3 +163,11 @@ class RecomendBoook(models.Model):
 
     def __str__(self):  # строковый метод
         return self.desc
+
+
+class Users(models.Model):
+    name = models.CharField(max_length=150)
+    e_mail = models.CharField(max_length=50)
+
+    def __str__(self):  # строковый метод
+        return self.name

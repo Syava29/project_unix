@@ -8,7 +8,6 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Главная</a></li>
             {% if request.user.is_authenticated %}
-
             {% comment %}
             <li class="nav-item"><a class="nav-link" href="{% url 'add_news' %}">Добавить новость</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'add_prep' %}">Добавить рабочую программу</a></li>
@@ -20,12 +19,14 @@
 
 
             {% endcomment %}
-
+            {% if user.username == 'Севостьянов' %}
             <li class="nav-item"><a class="nav-link" href="{% url 'opn_main_window' %}">Добавить основную информацию</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'parsing_book' %}">Парсинг</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'get_commp' %}">Парсинг</a></li>
-
-
+            {% endif %}
+            {% if user.username == 'РОП' %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'rop_head' %}">Добавить информацию</a></li>
+            {% endif %}
             {% endif %}
         </ul>
         <span class="navbar-text mx-3">

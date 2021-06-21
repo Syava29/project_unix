@@ -3,9 +3,9 @@ from django.views.generic import ListView
 import sqlite3
 import os
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks
+    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks, Users
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm, StructDiscip
+    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm, StructDiscip, ROPHead
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail, EmailMessage
@@ -24,6 +24,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Users.objects.create(name=form.cleaned_data['username'], e_mail=form.cleaned_data['email'])
             login(request, user)
             messages.success(request, 'Вы успешно зарегестрировались')
             return redirect('home')
@@ -427,52 +428,65 @@ def add_plan_res_education(request):
 def term_ex(term):
     term_extractor = TermExtractor()
     list_term = []
-    list_count = []
     for term in term_extractor(term, nested=True):
         list_term.append(term.normalized)
-    dic_term = set(list_term)
-    return(dic_term)
+    set_term = set(list_term)
+    return(set_term)
 
 
-def recomend_books():
+def term_comp():
     list_c = []
-    res_list = []
-    list_b_t = []
-    list_c_t = []
-    list_desc_book = []
     res_l = []
+    list_c_t = []
+
     bd1 = SelectComp.objects.values_list('descrip_c')
     bd11 = SelectComp.objects.values_list('kod_i_naim_c1')
     bd12 = SelectComp.objects.values_list('kod_i_naim_c2')
     bd13 = SelectComp.objects.values_list('kod_i_naim_c3')
-    pb1 = ParsBook.objects.values_list('ann_b')
-    pb2 = ParsBook.objects.values_list('description_b')
+
     list_c.append(bd1)
     list_c.append(bd11)
     list_c.append(bd12)
     list_c.append(bd13)
-    for items_b in pb1:
-        list_desc_book.append(*items_b)
 
     for items in list_c:
         for ii in items:
             res_l.append(*ii)
 
-    for items_t in list_desc_book:
-       list_b_t.append(term_ex(items_t))
-
     for items_t_c in res_l:
-       list_c_t.append(term_ex(items_t_c))
+        list_c_t.append(term_ex(items_t_c))
 
     return(list_c_t)
+
+
+
+
+def term_book():
+    list_b_t = []
+    list_desc_book = []
+
+    pb1 = ParsBook.objects.values_list('ann_b')
+
+    for items_b in pb1:
+        list_desc_book.append(*items_b)
+
+
+    # for items_t in list_desc_book:
+    #     list_b_t.append(term_ex(items_t))
+
+    return(list_desc_book)
+
+
+
 
 
 def struct_discip(request):
     if request.method == 'POST':
         form = StructDiscip(request.POST)
         if form.is_valid():
-            k = recomend_books()
-            print(k[0])
+            #t_comp = term_comp()
+            t_book = term_book()
+            print(t_book)
             return redirect('home')
     else:
         form = StructDiscip()
@@ -598,4 +612,15 @@ def del_doc(request):
         os.remove('/home/syava/webapp/RPD.docx')
         return redirect('add_test_data')
     return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
+
+
+def rop_head(request):
+    if request.method == 'POST':
+        form = ROPHead(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            return redirect('home')
+
+
+    return render(request, 'generation_rpd/rop_head.html', {'form': form})
 

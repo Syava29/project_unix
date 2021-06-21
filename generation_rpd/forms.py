@@ -1,5 +1,6 @@
 from django import forms
-from .models import Generator, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, Competence, ParsComp, ParsBook
+from .models import Generator, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, Competence, ParsComp, \
+    ParsBook
 import re
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -97,12 +98,13 @@ class BDForm(forms.Form):
     # form_education_title = forms.CharField(label='Форма', widget=forms.TextInput(attrs={"class": "form-control"}))
     god_nabora_num = forms.ModelChoiceField(empty_label=None, queryset=GodNabora.objects.all(), label='Год набора',
                                             widget=forms.Select(attrs={"class": "form-control"}))
-    naprav_podgotovki_title = forms.ModelChoiceField(empty_label=None, queryset=NapravPodgotovki.objects.all(), label='Направ',
+    naprav_podgotovki_title = forms.ModelChoiceField(empty_label=None, queryset=NapravPodgotovki.objects.all(),
+                                                     label='Направ',
                                                      widget=forms.Select(attrs={"class": "form-control"}))
     discip_title = forms.ModelChoiceField(empty_label=None, queryset=Discip.objects.all(), label='Дисцип',
                                           widget=forms.Select(attrs={"class": "form-control"}))
     # obyem_discip = forms.ModelChoiceField(empty_label=None, queryset=Discip.objects.all(), label='Объём',
-                                          # widget=forms.Select(attrs={"class": "form-control"}))
+    # widget=forms.Select(attrs={"class": "form-control"}))
     form_education_title = forms.ModelChoiceField(empty_label=None, queryset=FormEducation.objects.all(), label='Форма',
                                                   widget=forms.Select(attrs={"class": "form-control"}))
 
@@ -124,11 +126,11 @@ class PlanResEd(forms.Form):
 
 class StructDiscip(forms.Form):
     timee = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Часы',
-                                  widget=forms.Select(attrs={"class": "form-control"}))
+                                   widget=forms.Select(attrs={"class": "form-control"}))
     classes = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Занятия',
-                                  widget=forms.Select(attrs={"class": "form-control"}))
+                                     widget=forms.Select(attrs={"class": "form-control"}))
     form_ex = forms.ModelChoiceField(empty_label=None, queryset=ParsComp.objects.all(), label='Форма аттестации',
-                                  widget=forms.Select(attrs={"class": "form-control"}))
+                                     widget=forms.Select(attrs={"class": "form-control"}))
 
 
 class CompSelect(forms.Form):
@@ -149,3 +151,7 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
+class ROPHead(forms.Form):
+    prep = forms.CharField(label='ФИО преподавателя',
+                            widget=forms.Textarea(attrs={"class": "form-control"}))
+    discip = forms.FileField(label='Загрузить образовательную программу')

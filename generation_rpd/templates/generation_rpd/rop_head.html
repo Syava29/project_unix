@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }} :: {{ block.super }}
+{% endblock %}
+
+
+
+{% block content %}
+<h1>РОП</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<button type="submit" class="btn btn-primary btn-block"> Регистрация</button>
+</form>
+
+
+
+{% for artist in artists %}
+
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+
