@@ -171,3 +171,18 @@ class Users(models.Model):
 
     def __str__(self):  # строковый метод
         return self.name
+
+
+class PrepInfo(models.Model):
+    fio = models.CharField(max_length=150)
+    discip = models.CharField(max_length=300)
+
+    def __str__(self):  # строковый метод
+        return self.fio
+
+
+class PrepFIO(models.Model):
+    fio = models.CharField(max_length=150)
+
+    def __str__(self):  # строковый метод
+        return self.fio

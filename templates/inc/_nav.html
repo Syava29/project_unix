@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand mx-3" href="{% url 'home' %}">Генератор РПД</a>
+    <a class="navbar-brand mx-3" href="{% url 'home' %}">Конструктор РПД</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,7 +25,8 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'get_commp' %}">Парсинг</a></li>
             {% endif %}
             {% if user.username == 'РОП' %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'rop_head' %}">Добавить информацию</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'rop_add_fio' %}">Добавить преподавателя</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'rop_head' %}">Закрепить преподавателя</a></li>
             {% endif %}
             {% endif %}
         </ul>

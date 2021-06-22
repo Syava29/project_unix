@@ -32,5 +32,6 @@ urlpatterns = [
     path('opn_main_window/res/', gen_res, name='gen_res'),
     path('opn_main_window/del_doc/', del_doc, name='del_doc'),
     path('opn_main_window/struct_discip/', struct_discip, name='struct_discip'),
-    path('opn_main_window/rop_head/', rop_head, name='rop_head')
+    path('opn_main_window/rop_head/', rop_head, name='rop_head'),
+    path('opn_main_window/rop_add_fio/', rop_add_fio, name='rop_add_fio')
 ]

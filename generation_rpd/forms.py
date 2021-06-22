@@ -1,6 +1,6 @@
 from django import forms
 from .models import Generator, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, Competence, ParsComp, \
-    ParsBook
+    ParsBook, PrepFIO, RecomendBoook
 import re
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -141,7 +141,7 @@ class CompSelect(forms.Form):
 class Books(forms.Form):
     an_book = forms.CharField(label='Добавьте библиографическую запись',
                               widget=forms.Textarea(attrs={"class": "form-control"}))
-    offer_books = forms.ModelChoiceField(empty_label=None, queryset=ParsBook.objects.all(),
+    offer_books = forms.ModelChoiceField(empty_label=None, queryset=RecomendBoook.objects.all(),
                                          label='Предложение литературы',
                                          widget=forms.Select(attrs={"class": "form-control"}))
 
@@ -152,6 +152,14 @@ class UploadFileForm(forms.Form):
 
 
 class ROPHead(forms.Form):
-    prep = forms.CharField(label='ФИО преподавателя',
-                            widget=forms.Textarea(attrs={"class": "form-control"}))
-    discip = forms.FileField(label='Загрузить образовательную программу')
+    prep = forms.ModelChoiceField(empty_label=None, queryset=PrepFIO.objects.all(),
+                                         label='ФИО преподавателя',
+                                         widget=forms.Select(attrs={"class": "form-control"}))
+    discip = forms.ModelChoiceField(empty_label=None, queryset=Discip.objects.all(),
+                                         label='Дисциплина',
+                                         widget=forms.Select(attrs={"class": "form-control"}))
+
+
+class AddPrep(forms.Form):
+    fio = forms.CharField(label='ФИО преподавателя',
+                           widget=forms.TextInput(attrs={"class": "form-control"}))

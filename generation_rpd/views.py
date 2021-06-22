@@ -3,9 +3,9 @@ from django.views.generic import ListView
 import sqlite3
 import os
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks, Users
+    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks, Users, PrepInfo, PrepFIO, RecomendBoook
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm, StructDiscip, ROPHead
+    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm, StructDiscip, ROPHead, AddPrep
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail, EmailMessage
@@ -471,22 +471,49 @@ def term_book():
         list_desc_book.append(*items_b)
 
 
-    # for items_t in list_desc_book:
-    #     list_b_t.append(term_ex(items_t))
+    for items_t in list_desc_book:
+        list_b_t.append(term_ex(items_t))
 
-    return(list_desc_book)
+    return(list_b_t)
 
 
+def con_db(cursor):
+    conn = sqlite3.connect('/home/syava/webapp/db.sqlite3')
+    cur = conn.cursor()
+    cur.execute(cursor)
+    one_result = cur.fetchall()
+    list_res = []
+    for itt in one_result:
+        list_res.append(list(itt))
+    # list_res[0][1]
+    return(list_res)
 
+
+def rec_book(list_1, list_2):
+    b_a = []
+    d_book = []
+    ann = []
+    desc = con_db('SELECT description_b FROM generation_rpd_parsbook')
+    i = 0
+    for items in list_1:
+        res = list_2[3] & items
+        if len(res) >= 1:
+            b_a.append(res)
+            d_book.append(desc[i][0])
+            RecomendBoook.objects.create(desc=desc[i][0])
+            # ann.append(list_res[i])
+        i += 1
+    return(d_book)
 
 
 def struct_discip(request):
     if request.method == 'POST':
         form = StructDiscip(request.POST)
         if form.is_valid():
-            #t_comp = term_comp()
+            t_comp = term_comp()
             t_book = term_book()
-            print(t_book)
+
+            print(rec_book(t_book, t_comp))
             return redirect('home')
     else:
         form = StructDiscip()
@@ -614,13 +641,52 @@ def del_doc(request):
     return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
 
 
+def get_discip():
+    doc = Document('/home/syava/webapp/09_04_03.docx')
+        # par = doc.paragraphs
+    tbl = doc.tables
+
+    listt = []
+    l = []
+    i = 0
+    while i < 1:
+        for strok in tbl[4].rows:
+            rr = strok.cells[i].text.strip()
+            if rr != '':
+                listt.append(''.join(rr.split('\n')))
+            #l.append(listt)
+        i += 1
+    for x in listt:
+        while listt.count(x) > 1:
+            listt.remove(x) # [1, 2, 3, 4]
+    return(listt)
+
+
 def rop_head(request):
     if request.method == 'POST':
         form = ROPHead(request.POST)
         if form.is_valid():
+            PrepInfo.objects.create(fio=form.cleaned_data['prep'], discip=form.cleaned_data['discip'])
             print(form.cleaned_data)
-            return redirect('home')
+            # list_discip = get_discip()
+            # for items in list_discip:
+            #     Discip.objects.create(discip_title=items)
+            return redirect('rop_head')
 
+    else:
+        form = ROPHead()
 
     return render(request, 'generation_rpd/rop_head.html', {'form': form})
 
+def rop_add_fio(request):
+    if request.method == 'POST':
+        form = AddPrep(request.POST)
+        if form.is_valid():
+            PrepFIO.objects.create(fio=form.cleaned_data['fio'])
+            print(form.cleaned_data)
+            return redirect('rop_head')
+
+    else:
+        form = AddPrep()
+
+    return render(request, 'generation_rpd/rop_add_fio.html', {'form': form})
