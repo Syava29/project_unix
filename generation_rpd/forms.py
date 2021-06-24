@@ -1,6 +1,6 @@
 from django import forms
 from .models import Generator, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, Competence, ParsComp, \
-    ParsBook, PrepFIO, RecomendBoook
+    ParsBook, PrepFIO, RecomendBoook, Strings
 import re
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -18,16 +18,25 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserRegisterForm(UserCreationForm):
-    username = forms.CharField(label='Имя пользователя', help_text='Максимум 150 символов',
+    username = forms.CharField(label='Имя в системе', help_text='Максимум 150 символов',
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(label='Имя', help_text='Максимум 150 символов',
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label='Фамилия', help_text='Максимум 150 символов',
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    otchestvo = forms.CharField(label='Отчество', help_text='Максимум 150 символов',
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    role_prep = forms.ModelChoiceField(empty_label=None, queryset=Strings.objects.all(),
+                                  label='Роль(Преподователь или Руководитель?)',
+                                  widget=forms.Select(attrs={"class": "form-control"}))
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(label='Подтвержение пароля',
                                 widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(label='E-mail', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(label='E-mail', help_text='Пример: test@gmail.com', widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('last_name', 'first_name', 'otchestvo', 'email', 'password1', 'password2', 'role_prep', 'username')
 
 
 class NewsForm(forms.ModelForm):

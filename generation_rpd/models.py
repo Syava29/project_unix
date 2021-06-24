@@ -168,6 +168,7 @@ class RecomendBoook(models.Model):
 class Users(models.Model):
     name = models.CharField(max_length=150)
     e_mail = models.CharField(max_length=50)
+    role = models.CharField(max_length=10)
 
     def __str__(self):  # строковый метод
         return self.name
@@ -186,3 +187,10 @@ class PrepFIO(models.Model):
 
     def __str__(self):  # строковый метод
         return self.fio
+
+
+class Strings(models.Model):
+    role = models.CharField(max_length=150)
+
+    def __str__(self):  # строковый метод
+        return self.role

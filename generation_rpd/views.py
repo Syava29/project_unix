@@ -24,7 +24,8 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            Users.objects.create(name=form.cleaned_data['username'], e_mail=form.cleaned_data['email'])
+            Users.objects.create(name=form.cleaned_data['username'], e_mail=form.cleaned_data['email'],
+                                 role=form.cleaned_data['role_prep'])
             login(request, user)
             messages.success(request, 'Вы успешно зарегестрировались')
             return redirect('home')
@@ -663,6 +664,7 @@ def get_discip():
 
 
 def rop_head(request):
+    prep_info = PrepInfo.objects.all()
     if request.method == 'POST':
         form = ROPHead(request.POST)
         if form.is_valid():
@@ -671,12 +673,13 @@ def rop_head(request):
             # list_discip = get_discip()
             # for items in list_discip:
             #     Discip.objects.create(discip_title=items)
+
             return redirect('rop_head')
 
     else:
         form = ROPHead()
 
-    return render(request, 'generation_rpd/rop_head.html', {'form': form})
+    return render(request, 'generation_rpd/rop_head.html', {'form': form, 'prep_info': prep_info})
 
 def rop_add_fio(request):
     if request.method == 'POST':

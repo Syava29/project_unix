@@ -13,10 +13,27 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-<button type="submit" class="btn btn-primary btn-block">Закрепить</button>
+    <button type="submit" class="btn btn-primary btn-block">Закрепить</button>
+
+    <h2>Результатыт закрепления</h2>
+    <table border="1" width="100%" cellpadding="5">
+        <tr>
+            <th>ФИО преподавателя</th>
+            <th>Дисциплина</th>
+
+        </tr>
+
+        {% for tbl in prep_info %}
+        <tr>
+            <td>{{tbl.fio}}</td>
+            <td>{{tbl.discip}}</td>
+
+
+        </tr>
+        {% endfor %}
+    </table>
+
 </form>
-
-
 
 {% endblock %}
 
