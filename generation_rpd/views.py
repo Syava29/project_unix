@@ -51,6 +51,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
+    delete_sqlite_record()
     return redirect('login')
 
 
@@ -180,10 +181,11 @@ def add_test_data(request):
         form = BDForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
-            GodNabora.objects.create(god_nabora_num=form.cleaned_data['god_nabora_num'])
-            NapravPodgotovki.objects.create(naprav_podgotovki_title=form.cleaned_data['naprav_podgotovki_title'])
-            Discip.objects.create(discip_title=form.cleaned_data['discip_title'])
-            FormEducation.objects.create(form_education_title=form.cleaned_data['form_education_title'])
+            delete_sqlite_record()
+            #GodNabora.objects.create(god_nabora_num=form.cleaned_data['god_nabora_num'])
+            #NapravPodgotovki.objects.create(naprav_podgotovki_title=form.cleaned_data['naprav_podgotovki_title'])
+            #Discip.objects.create(discip_title=form.cleaned_data['discip_title'])
+            #FormEducation.objects.create(form_education_title=form.cleaned_data['form_education_title'])
             return redirect('add_goals')
     else:
         form = BDForm()
@@ -523,10 +525,32 @@ def struct_discip(request):
     return render(request, 'generation_rpd/struct_discip.html', {'form': form})
 
 
-def del_bd(request):
-    bd1 = SelectComp.objects.all()
+def delete_sqlite_record():
+    try:
+        sqlite_connection = sqlite3.connect('/home/syava/webapp/db.sqlite3')
+        cursor = sqlite_connection.cursor()
+        print("Подключен к SQLite")
 
-    return render(request, 'generation_rpd/add_compet.html', {'bd1': bd1})
+        sql_update_query1 = "DELETE FROM generation_rpd_selectcomp"
+        sql_update_query2 = "DELETE FROM generation_rpd_targetsandtasks"
+        sql_update_query3 = "DELETE FROM generation_rpd_selectbooks"
+        sql_update_query4 = "DELETE FROM generation_rpd_recomendboook"
+
+        cursor.execute(sql_update_query1)
+        cursor.execute(sql_update_query2)
+        cursor.execute(sql_update_query3)
+        cursor.execute(sql_update_query4)
+        sqlite_connection.commit()
+
+        print("Запись успешно удалена")
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
+    finally:
+        if sqlite_connection:
+            sqlite_connection.close()
+            print("Соединение с SQLite закрыто")
 
 
 def gen_book(request):
