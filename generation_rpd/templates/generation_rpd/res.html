@@ -65,12 +65,18 @@
     </tr>
     {% endfor %}
 </table>
-
+{% comment %}
 <form action = "{% url 'test' %}" method = "POST">
     {% csrf_token %}
     <button type="submit" class="btn btn-primary btn-block">Сгенерировать рабочую программу</button>
 </form>
+{% endcomment %}
 
+
+<form action = "{% url 'del_doc' %}" method = "POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-block">Удалить</button>
+</form>
 
 
 {% endblock %}

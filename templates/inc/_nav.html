@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand mx-3" href="{% url 'home' %}">Генератор РПД</a>
+    <a class="navbar-brand mx-3" href="{% url 'home' %}">Конструктор РПД</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,29 +8,31 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Главная</a></li>
             {% if request.user.is_authenticated %}
-
             {% comment %}
             <li class="nav-item"><a class="nav-link" href="{% url 'add_news' %}">Добавить новость</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'add_prep' %}">Добавить рабочую программу</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'add_basic_data' %}">Добавить основную информацию</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'connect_db' %}">Проверка бд</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'bd_test' %}">Проверка бд</a></li>
-
+            <li class="nav-item"><a class="nav-link" href="{% url 'get_commp' %}">Парсинг</a></li>
+            {% endif %}
             <li class="nav-item"><a class="nav-link" href="{% url 'get_comp' %}">Comp</a></li>
 
 
             {% endcomment %}
-
+            {% if user.role_prep == 'Преподаватель' %}
             <li class="nav-item"><a class="nav-link" href="{% url 'opn_main_window' %}">Добавить основную информацию</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'parsing_book' %}">Парсинг</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'get_commp' %}">Парсинг</a></li>
-
-
+            {% endif %}
+            {% if user.role_prep == 'РОП' %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'rop_add_fio' %}">Добавить преподавателя</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'rop_head' %}">Закрепить преподавателя</a></li>
+            {% endif %}
             {% endif %}
         </ul>
         <span class="navbar-text mx-3">
             {% if request.user.is_authenticated %}
-            Добро пожаловать {{ user.username }} | <a href="{% url 'logout' %}">Выход</a>
+            Добро пожаловать {{ user.second_name }} {{user.first_name}} {{user.otchestvo}} ( {{user.username}} ) | <a href="{% url 'logout' %}">Выход</a>
             {% else %}
             <a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
             {% endif %}

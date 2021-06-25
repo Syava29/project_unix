@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 import sqlite3
+import os
 from .models import Generator, Category, Prepod, Discip, GodNabora, FormEducation, NapravPodgotovki, ZUV, ParsBook, \
-    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks
+    Competence, ParsComp, SelectComp, TargetsAndTasks, SelectBooks, Users, PrepInfo, PrepFIO, RecomendBoook
 from .forms import NewsForm, TestForm, PrepForm, UserRegisterForm, UserLoginForm, ContactForm, BasicDataForm, BasicForm, \
-    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm
+    BDForm, GandO, PlanResEd, CompSelect, Books, UploadFileForm, StructDiscip, ROPHead, AddPrep
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail, EmailMessage
@@ -14,8 +15,8 @@ from collections import Counter
 from openpyxl import load_workbook
 import re
 from docx import Document
-
-
+from docxtpl import DocxTemplate
+from rutermextract import TermExtractor
 
 
 def register(request):
@@ -23,6 +24,8 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Users.objects.create(name=form.cleaned_data['username'], e_mail=form.cleaned_data['email'],
+                                 role=form.cleaned_data['role_prep'])
             login(request, user)
             messages.success(request, 'Вы успешно зарегестрировались')
             return redirect('home')
@@ -48,6 +51,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
+    delete_sqlite_record()
     return redirect('login')
 
 
@@ -102,7 +106,7 @@ def test(request):
             ['syava_test@mail.ru']
         )
 
-        email.attach_file('09_04_03.docx')
+        email.attach_file('RPD.docx')
         email.send()
         return redirect('test')
 
@@ -177,10 +181,11 @@ def add_test_data(request):
         form = BDForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
-            GodNabora.objects.create(god_nabora_num=form.cleaned_data['god_nabora_num'])
-            NapravPodgotovki.objects.create(naprav_podgotovki_title=form.cleaned_data['naprav_podgotovki_title'])
-            Discip.objects.create(discip_title=form.cleaned_data['discip_title'])
-            FormEducation.objects.create(form_education_title=form.cleaned_data['form_education_title'])
+            delete_sqlite_record()
+            #GodNabora.objects.create(god_nabora_num=form.cleaned_data['god_nabora_num'])
+            #NapravPodgotovki.objects.create(naprav_podgotovki_title=form.cleaned_data['naprav_podgotovki_title'])
+            #Discip.objects.create(discip_title=form.cleaned_data['discip_title'])
+            #FormEducation.objects.create(form_education_title=form.cleaned_data['form_education_title'])
             return redirect('add_goals')
     else:
         form = BDForm()
@@ -341,7 +346,7 @@ def pars_test(table):
     # for iitems in listt:
     #      if iitems not in ll1:
     #       ll1.append(iitems)
-    return(l)
+    return (l)
 
 
 def get_data_comp(request):
@@ -364,7 +369,7 @@ def get_data_comp(request):
     l1_3 = list(k[2][0::3])
     list_ret.append(l1_3)
 
-    #while i < len(l1):
+    # while i < len(l1):
     #   ParsComp.objects.create(kod_comp=l1[i], descrip_comp=l2[i], kod_i_naim_comp1=l1_3[i], kod_i_naim_comp2=l1_2[i],
     #                          kod_i_naim_comp3=l1_1[i])
     # i += 1
@@ -400,19 +405,20 @@ def add_plan_res_education(request):
         if form.is_valid():
             flag = 0
             k = str(form.cleaned_data['comp'])
-            #print(list_1)
+            # print(list_1)
             for itt in listt:
                 for i in itt:
                     if i == k:
                         print(list_1[flag][0])
                         print(list_2[flag][0])
                         print(list_3[flag][0])
-                        SelectComp.objects.create(descrip_c=k, kod_i_naim_c1=list_1[flag][0], kod_i_naim_c2=list_3[flag][0],
+                        SelectComp.objects.create(descrip_c=k, kod_i_naim_c1=list_1[flag][0],
+                                                  kod_i_naim_c2=list_3[flag][0],
                                                   kod_i_naim_c3=list_2[flag][0])
 
                         pass
                     flag += 1
-            #if form.cleaned_data['comp'] ==
+            # if form.cleaned_data['comp'] ==
             return redirect('add_plan_res_education')
     else:
         form = CompSelect()
@@ -422,10 +428,129 @@ def add_plan_res_education(request):
     return render(request, 'generation_rpd/add_compet.html', {'form': form, 'bd1': bd1})
 
 
-def del_bd(request):
-    bd1 = SelectComp.objects.all()
+def term_ex(term):
+    term_extractor = TermExtractor()
+    list_term = []
+    for term in term_extractor(term, nested=True):
+        list_term.append(term.normalized)
+    set_term = set(list_term)
+    return(set_term)
 
-    return render(request, 'generation_rpd/add_compet.html', {'bd1': bd1})
+
+def term_comp():
+    list_c = []
+    res_l = []
+    list_c_t = []
+
+    bd1 = SelectComp.objects.values_list('descrip_c')
+    bd11 = SelectComp.objects.values_list('kod_i_naim_c1')
+    bd12 = SelectComp.objects.values_list('kod_i_naim_c2')
+    bd13 = SelectComp.objects.values_list('kod_i_naim_c3')
+
+    list_c.append(bd1)
+    list_c.append(bd11)
+    list_c.append(bd12)
+    list_c.append(bd13)
+
+    for items in list_c:
+        for ii in items:
+            res_l.append(*ii)
+
+    for items_t_c in res_l:
+        list_c_t.append(term_ex(items_t_c))
+
+    return(list_c_t)
+
+
+
+
+def term_book():
+    list_b_t = []
+    list_desc_book = []
+
+    pb1 = ParsBook.objects.values_list('ann_b')
+
+    for items_b in pb1:
+        list_desc_book.append(*items_b)
+
+
+    for items_t in list_desc_book:
+        list_b_t.append(term_ex(items_t))
+
+    return(list_b_t)
+
+
+def con_db(cursor):
+    conn = sqlite3.connect('/home/syava/webapp/db.sqlite3')
+    cur = conn.cursor()
+    cur.execute(cursor)
+    one_result = cur.fetchall()
+    list_res = []
+    for itt in one_result:
+        list_res.append(list(itt))
+    # list_res[0][1]
+    return(list_res)
+
+
+def rec_book(list_1, list_2):
+    b_a = []
+    d_book = []
+    ann = []
+    desc = con_db('SELECT description_b FROM generation_rpd_parsbook')
+    i = 0
+    for items in list_1:
+        res = list_2[3] & items
+        if len(res) >= 1:
+            b_a.append(res)
+            d_book.append(desc[i][0])
+            RecomendBoook.objects.create(desc=desc[i][0])
+            # ann.append(list_res[i])
+        i += 1
+    return(d_book)
+
+
+def struct_discip(request):
+    if request.method == 'POST':
+        form = StructDiscip(request.POST)
+        if form.is_valid():
+            t_comp = term_comp()
+            t_book = term_book()
+
+            print(rec_book(t_book, t_comp))
+            return redirect('home')
+    else:
+        form = StructDiscip()
+
+    bd1 = SelectComp.objects.all()
+    return render(request, 'generation_rpd/struct_discip.html', {'form': form})
+
+
+def delete_sqlite_record():
+    try:
+        sqlite_connection = sqlite3.connect('/home/syava/webapp/db.sqlite3')
+        cursor = sqlite_connection.cursor()
+        print("Подключен к SQLite")
+
+        sql_update_query1 = "DELETE FROM generation_rpd_selectcomp"
+        sql_update_query2 = "DELETE FROM generation_rpd_targetsandtasks"
+        sql_update_query3 = "DELETE FROM generation_rpd_selectbooks"
+        sql_update_query4 = "DELETE FROM generation_rpd_recomendboook"
+
+        cursor.execute(sql_update_query1)
+        cursor.execute(sql_update_query2)
+        cursor.execute(sql_update_query3)
+        cursor.execute(sql_update_query4)
+        sqlite_connection.commit()
+
+        print("Запись успешно удалена")
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
+    finally:
+        if sqlite_connection:
+            sqlite_connection.close()
+            print("Соединение с SQLite закрыто")
 
 
 def gen_book(request):
@@ -442,29 +567,153 @@ def gen_book(request):
     return render(request, 'generation_rpd/books.html', {'form': form, 'bd_book': bd_book})
 
 
+def gen_final_doc():
+    doc = DocxTemplate('tempp1.docx')
+    # добавляем первый параграф
+
+    list_1 = []
+    list_11 = []
+    list_12 = []
+    list_13 = []
+    list_2 = []
+    list_3 = []
+
+    bd1 = SelectComp.objects.values_list('descrip_c')
+    bd11 = SelectComp.objects.values_list('kod_i_naim_c1')
+    bd12 = SelectComp.objects.values_list('kod_i_naim_c2')
+    bd13 = SelectComp.objects.values_list('kod_i_naim_c3')
+
+
+    bd2 = TargetsAndTasks.objects.values_list('target')
+    k = SelectBooks.objects.values_list('book')
+
+    for items in k:
+        list_1.append(items)
+
+    for items in bd1:
+        list_2.append(str(items))
+
+    for items in bd11:
+        list_11.append(str(items))
+
+    for items in bd12:
+        list_12.append(str(items))
+
+    for items in bd13:
+        list_13.append(str(items))
+
+    for items in bd2:
+        list_3.append(items)
+
+    table_contents = []
+    book_cont = []
+    k = 0
+    k1 = 0
+    for i in list_2:
+        table_contents.append({
+            'cod': i,
+            'desc1': list_11[k],
+            'desc2': list_12[k],
+            'desc3': list_13[k]
+        })
+        k += 1
+
+    context = {
+        'title': 'Automated Report',
+        'table_contents': table_contents,
+        'book': list_1
+    }
+
+    doc.render(context)
+    # doc.add_paragraph(list_1[0])
+
+    # добавляем еще два параграфа
+    #par1 = doc.add_paragraph('Это второй абзац.')
+    #par2 = doc.add_paragraph('Это третий абзац.')
+
+    # добавляем текст во второй параграф
+    # par1.add_run(list_2[0])
+    #for items in k:
+        #doc.add_paragraph(items)
+
+    # добавляем текст в третий параграф
+    # par2.add_run(list_3[0]).bold = True
+
+    doc.save('RPD.docx')
+    print(list_1[1])
+
 def gen_res(request):
     bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.all()
     bd2 = TargetsAndTasks.objects.all()
+    # print(bd_book)
+    gen_final_doc()
     if request.method == 'POST':
-        print(bd_book)
+        # print(bd_book)
         return redirect('gen_res')
 
     return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
 
 
-def handle_uploaded_file(f):
-    with open('some/file/name.txt', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+def del_doc(request):
+    bd_book = SelectBooks.objects.all()
+    bd1 = SelectComp.objects.all()
+    bd2 = TargetsAndTasks.objects.all()
 
-
-def upload_file(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
+        os.remove('/home/syava/webapp/RPD.docx')
+        return redirect('add_test_data')
+    return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
+
+
+def get_discip():
+    doc = Document('/home/syava/webapp/09_04_03.docx')
+        # par = doc.paragraphs
+    tbl = doc.tables
+
+    listt = []
+    l = []
+    i = 0
+    while i < 1:
+        for strok in tbl[4].rows:
+            rr = strok.cells[i].text.strip()
+            if rr != '':
+                listt.append(''.join(rr.split('\n')))
+            #l.append(listt)
+        i += 1
+    for x in listt:
+        while listt.count(x) > 1:
+            listt.remove(x) # [1, 2, 3, 4]
+    return(listt)
+
+
+def rop_head(request):
+    prep_info = PrepInfo.objects.all()
+    if request.method == 'POST':
+        form = ROPHead(request.POST)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return redirect('gen_res')
+            PrepInfo.objects.create(fio=form.cleaned_data['prep'], discip=form.cleaned_data['discip'])
+            print(form.cleaned_data)
+            # list_discip = get_discip()
+            # for items in list_discip:
+            #     Discip.objects.create(discip_title=items)
+
+            return redirect('rop_head')
+
     else:
-        form = UploadFileForm()
-    return render(request, 'generation_rpd/up_file.html', {'form': form})
+        form = ROPHead()
+
+    return render(request, 'generation_rpd/rop_head.html', {'form': form, 'prep_info': prep_info})
+
+def rop_add_fio(request):
+    if request.method == 'POST':
+        form = AddPrep(request.POST)
+        if form.is_valid():
+            PrepFIO.objects.create(fio=form.cleaned_data['fio'])
+            print(form.cleaned_data)
+            return redirect('rop_head')
+
+    else:
+        form = AddPrep()
+
+    return render(request, 'generation_rpd/rop_add_fio.html', {'form': form})

@@ -156,3 +156,41 @@ class TargetsAndTasks(models.Model):
 
     def __str__(self):  # строковый метод
         return self.target
+
+
+class RecomendBoook(models.Model):
+    desc = models.TextField(blank=True, verbose_name='Библиографическая запись')
+
+    def __str__(self):  # строковый метод
+        return self.desc
+
+
+class Users(models.Model):
+    name = models.CharField(max_length=150)
+    e_mail = models.CharField(max_length=50)
+    role = models.CharField(max_length=10)
+
+    def __str__(self):  # строковый метод
+        return self.name
+
+
+class PrepInfo(models.Model):
+    fio = models.CharField(max_length=150)
+    discip = models.CharField(max_length=300)
+
+    def __str__(self):  # строковый метод
+        return self.fio
+
+
+class PrepFIO(models.Model):
+    fio = models.CharField(max_length=150)
+
+    def __str__(self):  # строковый метод
+        return self.fio
+
+
+class Strings(models.Model):
+    role = models.CharField(max_length=150)
+
+    def __str__(self):  # строковый метод
+        return self.role
