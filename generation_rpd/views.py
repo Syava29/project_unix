@@ -17,6 +17,7 @@ import re
 from docx import Document
 from docxtpl import DocxTemplate
 from rutermextract import TermExtractor
+from django.core.files.storage import FileSystemStorage
 
 
 def register(request):
@@ -667,7 +668,7 @@ def del_doc(request):
 
 
 def get_discip():
-    doc = Document('/home/syava/webapp/09_04_03.docx')
+    doc = Document('/home/syava/webapp/media/09_04_03.docx')
         # par = doc.paragraphs
     tbl = doc.tables
 
@@ -705,6 +706,7 @@ def rop_head(request):
 
     return render(request, 'generation_rpd/rop_head.html', {'form': form, 'prep_info': prep_info})
 
+
 def rop_add_fio(request):
     if request.method == 'POST':
         form = AddPrep(request.POST)
@@ -717,3 +719,16 @@ def rop_add_fio(request):
         form = AddPrep()
 
     return render(request, 'generation_rpd/rop_add_fio.html', {'form': form})
+
+
+def upload(request):
+    context = {}
+    if request.method == 'POST':
+        uploaded_file = request.FILES['document']
+        fs = FileSystemStorage()
+        name = fs.save(uploaded_file.name, uploaded_file)
+        context['url'] = fs.url(name)
+
+        # print(uploaded_file.name)
+        # print(uploaded_file.size)
+    return render(request, 'generation_rpd/upload.html', context)

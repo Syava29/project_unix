@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Добавление основной информации - {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% include 'inc/_sidebar.html' %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Загрузка образовательной программы</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="document">
+    <button type="submit">Загрузить</button>
+</form>
+{% if url %}
+    <p>Файл: <a href="{{ url }}">{{ url }}</a></p>
+{% endif %}
+{% endblock %}
+
+
+
+
