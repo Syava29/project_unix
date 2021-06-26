@@ -25,6 +25,7 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'parsing_book' %}">Парсинг</a></li>
             {% endif %}
             {% if user.role_prep == 'РОП' %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'upload' %}">Загрузить образовательную программу</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'rop_add_fio' %}">Добавить преподавателя</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'rop_head' %}">Закрепить преподавателя</a></li>
             {% endif %}

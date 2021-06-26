@@ -73,12 +73,13 @@
 {% endcomment %}
 
 
-<form action = "{% url 'del_doc' %}" method = "POST">
+{% if url %}
+    <p>Файл: {{url}} <a href="{{ url }}" class="btn btn-primary btn-sm" id="download_file">Скачать файл</a></p>
+{% endif %}
+<form action = "/" method = "POST">
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary btn-block">Удалить</button>
+    <button type="submit" class="btn btn-primary btn-block">Отправить на почту</button>
 </form>
-
-
 {% endblock %}
 
 

@@ -640,20 +640,23 @@ def gen_final_doc():
     # добавляем текст в третий параграф
     # par2.add_run(list_3[0]).bold = True
 
-    doc.save('RPD.docx')
-    print(list_1[1])
+    doc.save('/home/syava/webapp/media/RPD.docx')
 
 def gen_res(request):
+    context = {}
     bd_book = SelectBooks.objects.all()
     bd1 = SelectComp.objects.all()
     bd2 = TargetsAndTasks.objects.all()
+    fs = FileSystemStorage()
+    name = '/document/RPD.docx'
+    context['url'] = fs.url(name)
     # print(bd_book)
     gen_final_doc()
     if request.method == 'POST':
         # print(bd_book)
-        return redirect('gen_res')
+        return redirect('generation_rpd/res')
 
-    return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2})
+    return render(request, 'generation_rpd/res.html', {'bd_book': bd_book, 'bd1': bd1, 'bd2': bd2, 'url': name})
 
 
 def del_doc(request):
@@ -717,8 +720,8 @@ def rop_add_fio(request):
 
     else:
         form = AddPrep()
-
-    return render(request, 'generation_rpd/rop_add_fio.html', {'form': form})
+    prep = PrepFIO.objects.all()
+    return render(request, 'generation_rpd/rop_add_fio.html', {'form': form, 'prep': prep})
 
 
 def upload(request):
@@ -728,7 +731,9 @@ def upload(request):
         fs = FileSystemStorage()
         name = fs.save(uploaded_file.name, uploaded_file)
         context['url'] = fs.url(name)
-
+        list_discip = get_discip()
+        for items in list_discip:
+            Discip.objects.create(discip_title=items)
         # print(uploaded_file.name)
         # print(uploaded_file.size)
     return render(request, 'generation_rpd/upload.html', context)

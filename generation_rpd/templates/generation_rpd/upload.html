@@ -1,14 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Добавление основной информации - {{ block.super }}
+Добавление основной информации - {{ block.super }}
 {% endblock %}
 
-{% block sidebar %}
-
-{% include 'inc/_sidebar.html' %}
-
-{% endblock %}
 
 {% block content %}
 <h1>Загрузка образовательной программы</h1>
@@ -18,7 +13,8 @@
     <button type="submit">Загрузить</button>
 </form>
 {% if url %}
-    <p>Файл: <a href="{{ url }}">{{ url }}</a></p>
+<h2>Файл успешно загружен в систему</h2>
+<p>Файл: <a href="{{ url }}">{{ url }}</a></p>
 {% endif %}
 {% endblock %}
 

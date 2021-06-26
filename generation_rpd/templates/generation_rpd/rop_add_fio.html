@@ -9,14 +9,25 @@
 
 
 {% block content %}
-<h1>РОП</h1>
+<h1>Добавление преподователя</h1>
+<h2>Добавьте преподователя</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
 <button type="submit" class="btn btn-primary btn-block">Добавить</button>
 </form>
 
+ <table border="1" width="100%" cellpadding="5">
+        <tr>
+            <th>ФИО преподавателя</th>
+        </tr>
 
+        {% for tbl in prep %}
+        <tr>
+            <td>{{tbl.fio}}</td>
+        </tr>
+        {% endfor %}
+ </table>
 
 {% endblock %}
 
